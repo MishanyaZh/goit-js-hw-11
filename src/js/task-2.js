@@ -1,23 +1,35 @@
 import '../sass/main.css';
 import Swal from 'sweetalert2';
-// console.log(Swal);
-console.log(new Date());
+
 const inputDataSelector = document.querySelector('#date-selector');
 const startCountdown = document.querySelector('[data-start]');
 
 startCountdown.addEventListener('click', startTimer);
+
+inputDataSelector.addEventListener('change', isDateInTheFuture);
+
+startCountdown.disabled = true;
+
 function startTimer(evt) {
 
+    startCountdown.disabled = true;
     const intervalId = setInterval(() => {
-        
         const currentTime = Date.now();
-        
         const selectDate = Date.parse(inputDataSelector.value);
-       
-        const deltaTime = convertMs(selectDate - currentTime)
-        console.log(deltaTime);
+        const deltaTime = selectDate - currentTime;
+        convertMs(deltaTime);
+
     }, 1000);
-    
+}
+
+function isDateInTheFuture(evt) {
+
+    if (Date.parse(inputDataSelector.value) >= Date.now() ) {
+        startCountdown.disabled = false;
+        return;
+    } Swal.fire({
+        icon: 'error',
+        text:'Please choose a date in the future'})
 }
 
 function convertMs(ms) {
